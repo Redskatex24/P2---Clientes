@@ -15,9 +15,9 @@ public class ClientesModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(name = "nombre")
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(name = "numero")
     private int numero;
 }
