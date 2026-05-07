@@ -1,6 +1,8 @@
 package com.duoc.clientes.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
     @Data
@@ -8,6 +10,7 @@ import lombok.Data;
         @NotBlank(message = "el nombre no puede estar vacío")
         private String nombre;
 
-        @NotBlank(message = "el número no puede estar vacío")
+        @Positive
+        @NotNull (message = "el numero no puede ser nulo")
         private int numero;
 }
