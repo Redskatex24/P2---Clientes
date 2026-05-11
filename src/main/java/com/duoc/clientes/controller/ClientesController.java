@@ -18,9 +18,14 @@ public class ClientesController {
     private ClientesService clientesService;
 
     @GetMapping
-    public ResponseEntity<List<ClientesDTO>> listarClientes(){
-        List<ClientesDTO> clientes = clientesService.listar();
-        if (clientes.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<List<ClientesDTO>> listarClientes(@RequestParam(required = false) String nombre) {
+        List<ClientesDTO> clientes;
+        if (nombre != null) {
+            clientes = clientesService.buscarPorNombre(nombre);
+        } else {
+            clientes = clientesService.listar();
+        }
+        if (clientes.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
     @PostMapping

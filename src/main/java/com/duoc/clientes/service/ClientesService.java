@@ -2,8 +2,10 @@ package com.duoc.clientes.service;
 
 import com.duoc.clientes.dto.ClientesDTO;
 import com.duoc.clientes.dto.ClientesRequest;
+import com.duoc.clientes.exeption.ClientesNotFoundException;
 import com.duoc.clientes.model.ClientesModel;
 import com.duoc.clientes.repository.ClientesRepository;
+import com.duoc.clientes.sale.CategoriaVenta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import java.util.stream.Collectors;
 public class ClientesService {
     @Autowired
     private ClientesRepository clientesRepository;
+
+    @Autowired
+    private CategoriaVenta categoriaVenta;
 
     public ClientesDTO guardar(ClientesRequest request) {
         ClientesModel clientes = new ClientesModel();
@@ -30,11 +35,11 @@ public class ClientesService {
                 .collect(Collectors.toList());
     }
     public ClientesDTO buscarPorId(int id) {
-        ClientesModel clientes = clientesRepository.findById(id).orElseThrow(() -> new NullPointerException("Cliente no encontrado por el id: " + id));
+        ClientesModel clientes = clientesRepository.findById(id).orElseThrow(() -> new ClientesNotFoundException(id));
         return convertirADTO(clientes);
     }
     public ClientesDTO actualizar(int id, ClientesRequest request) {
-        ClientesModel clienteExistente = clientesRepository.findById(id).orElseThrow(() -> new NullPointerException("Cliente no encontrado"));
+        ClientesModel clienteExistente = clientesRepository.findById(id).orElseThrow(() -> new ClientesNotFoundException(id));
         clienteExistente.setNombre(request.getNombre());
         clienteExistente.setNumero(request.getNumero());
 
@@ -53,5 +58,11 @@ public class ClientesService {
         dto.setNombre(clientes.getNombre());
         dto.setNumero(clientes.getNumero());
         return dto;
+    }
+    public List<ClientesDTO> buscarPorNombre(String nombre) {
+        return clientesRepository.findClientesModelByNombreContainsIgnoreCase(nombre)
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
     }
 }
