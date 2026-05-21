@@ -18,7 +18,7 @@ public class ClientesController {
     private ClientesService clientesService;
 
     @GetMapping
-    public ResponseEntity<List<ClientesDTO>> listarClientes(@RequestParam(required = false) String nombre) {
+    public ResponseEntity<List<ClientesDTO>> listar(@RequestParam(required = false) String nombre) {
         List<ClientesDTO> clientes;
         if (nombre != null) {
             clientes = clientesService.buscarPorNombre(nombre);
@@ -29,7 +29,7 @@ public class ClientesController {
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<ClientesDTO> guardarClientes(@Valid @RequestBody ClientesRequest request) {
+    public ResponseEntity<ClientesDTO> guardar(@Valid @RequestBody ClientesRequest request) {
         return new ResponseEntity<>(clientesService.guardar(request), HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
@@ -41,7 +41,7 @@ public class ClientesController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ClientesDTO> atualizarClientes(@PathVariable int id, @Valid @RequestBody ClientesRequest request) {
+    public ResponseEntity<ClientesDTO> atualizar(@PathVariable int id, @Valid @RequestBody ClientesRequest request) {
         try{
             return new ResponseEntity<>(clientesService.actualizar(id, request), HttpStatus.OK);}
         catch (NullPointerException e) {
@@ -49,7 +49,7 @@ public class ClientesController {
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarClientes(@PathVariable int id){
+    public ResponseEntity<Void> eliminar(@PathVariable int id){
         clientesService.eliminar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
