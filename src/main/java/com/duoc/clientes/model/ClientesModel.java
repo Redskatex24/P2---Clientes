@@ -20,4 +20,7 @@ public class ClientesModel {
 
     @Column(nullable = false)
     private int numero;
+
+    @Column(nullable = false)
+    private int id_categoria;
 }

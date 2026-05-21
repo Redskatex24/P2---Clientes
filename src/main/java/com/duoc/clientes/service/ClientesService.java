@@ -1,11 +1,13 @@
 package com.duoc.clientes.service;
 
+import com.duoc.clientes.dto.CategoriaDTO;
 import com.duoc.clientes.dto.ClientesDTO;
 import com.duoc.clientes.dto.ClientesRequest;
 import com.duoc.clientes.exeption.ClientesNotFoundException;
+import com.duoc.clientes.model.CategoriasModel;
 import com.duoc.clientes.model.ClientesModel;
 import com.duoc.clientes.repository.ClientesRepository;
-import com.duoc.clientes.sale.CategoriaVenta;
+import com.duoc.clientes.client.CategoriaCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ public class ClientesService {
     private ClientesRepository clientesRepository;
 
     @Autowired
-    private CategoriaVenta categoriaVenta;
+    private CategoriaCliente categoriaCliente;
 
     public ClientesDTO guardar(ClientesRequest request) {
         ClientesModel clientes = new ClientesModel();
@@ -36,12 +38,21 @@ public class ClientesService {
     }
     public ClientesDTO buscarPorId(int id) {
         ClientesModel clientes = clientesRepository.findById(id).orElseThrow(() -> new ClientesNotFoundException(id));
-        return convertirADTO(clientes);
+        CategoriasModel categoria = categoriaCliente.obtenerCategorias(clientes.getId_categoria());
+        ClientesDTO clienteDTO = new ClientesDTO();
+        clienteDTO.setNombre(clientes.getNombre());
+        clienteDTO.setNumero(clientes.getNumero());
+        clienteDTO.setId_categoria(categoria.getId());
+        clienteDTO.setNombreCategoria(categoria.getNombre());
+        return convertirADTO(clientes, categoria);
     }
     public ClientesDTO actualizar(int id, ClientesRequest request) {
         ClientesModel clienteExistente = clientesRepository.findById(id).orElseThrow(() -> new ClientesNotFoundException(id));
+        CategoriasModel categoriaExistente = categoriaCliente.obtenerCategorias(clienteExistente.getId_categoria());
         clienteExistente.setNombre(request.getNombre());
         clienteExistente.setNumero(request.getNumero());
+        categoriaExistente.setId(categoriaExistente.getId());
+        categoriaExistente.setNombre(categoriaExistente.getNombre());
 
         ClientesModel actualizado = clientesRepository.save(clienteExistente);
         return convertirADTO(actualizado);
@@ -57,6 +68,17 @@ public class ClientesService {
         dto.setId(clientes.getId());
         dto.setNombre(clientes.getNombre());
         dto.setNumero(clientes.getNumero());
+        return dto;
+    }
+
+    private ClientesDTO convertirADTO(ClientesModel clientes, CategoriasModel categorias) {
+        if(clientes == null) return null;
+        ClientesDTO dto = new ClientesDTO();
+        dto.setId(clientes.getId());
+        dto.setNombre(clientes.getNombre());
+        dto.setNumero(clientes.getNumero());
+        dto.setId_categoria(categorias.getId());
+        dto.setNombreCategoria(categorias.getNombre());
         return dto;
     }
     public List<ClientesDTO> buscarPorNombre(String nombre) {
