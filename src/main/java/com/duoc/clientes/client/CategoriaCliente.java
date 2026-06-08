@@ -1,6 +1,5 @@
 package com.duoc.clientes.client;
 
-import com.duoc.clientes.dto.CategoriaDTO;
 import com.duoc.clientes.model.CategoriasModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
