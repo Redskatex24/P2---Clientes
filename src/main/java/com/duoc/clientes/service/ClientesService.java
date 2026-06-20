@@ -1,18 +1,22 @@
 package com.duoc.clientes.service;
 
+import com.duoc.clientes.dto.CategoriaDTO;
 import com.duoc.clientes.dto.ClientesDTO;
 import com.duoc.clientes.dto.ClientesRequest;
+import com.duoc.clientes.exeption.CategoriaNotFoundException;
 import com.duoc.clientes.exeption.ClientesNotFoundException;
 import com.duoc.clientes.model.CategoriasModel;
 import com.duoc.clientes.model.ClientesModel;
 import com.duoc.clientes.repository.ClientesRepository;
 import com.duoc.clientes.client.CategoriaCliente;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ClientesService {
     @Autowired
@@ -27,6 +31,7 @@ public class ClientesService {
         clientes.setNumero(request.getNumero());
 
         ClientesModel guardado = clientesRepository.save(clientes);
+        log.info("Cliente almacenado correctamente: " + clientes);
         return convertirADTO(guardado);
     }
     public List<ClientesDTO> listar() {

@@ -3,7 +3,9 @@ package com.duoc.clientes.controller;
 import com.duoc.clientes.dto.ClientesDTO;
 import com.duoc.clientes.dto.ClientesRequest;
 import com.duoc.clientes.service.ClientesService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
+@Tag(name = "Clientes", description = "Operaciones relacionadas con la gestión de clientes")
 @RestController
 @RequestMapping("/api/v1/clientes")
 public class ClientesController {
@@ -30,6 +34,7 @@ public class ClientesController {
     }
     @PostMapping
     public ResponseEntity<ClientesDTO> guardar(@Valid @RequestBody ClientesRequest request) {
+        log.info("El request para crear un cliente fue: " + request);
         return new ResponseEntity<>(clientesService.guardar(request), HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
@@ -37,6 +42,7 @@ public class ClientesController {
         try{
             return new ResponseEntity<>(clientesService.buscarPorId(id), HttpStatus.OK);}
         catch (NullPointerException e){
+            log.error("No se ha encontrado el id de cliente: " + id + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
