@@ -1,9 +1,7 @@
 package com.duoc.clientes.service;
 
-import com.duoc.clientes.dto.CategoriaDTO;
 import com.duoc.clientes.dto.ClientesDTO;
 import com.duoc.clientes.dto.ClientesRequest;
-import com.duoc.clientes.exeption.CategoriaNotFoundException;
 import com.duoc.clientes.exeption.ClientesNotFoundException;
 import com.duoc.clientes.model.CategoriasModel;
 import com.duoc.clientes.model.ClientesModel;
